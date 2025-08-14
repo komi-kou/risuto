@@ -13,16 +13,16 @@ import datetime
 import encodings.idna  # noqa: F401
 from io import UnsupportedOperation
 
-from pip._vendor.urllib3.exceptions import (
+from urllib3.exceptions import (
     DecodeError,
     LocationParseError,
     ProtocolError,
     ReadTimeoutError,
     SSLError,
 )
-from pip._vendor.urllib3.fields import RequestField
-from pip._vendor.urllib3.filepost import encode_multipart_formdata
-from pip._vendor.urllib3.util import parse_url
+from urllib3.fields import RequestField
+from urllib3.filepost import encode_multipart_formdata
+from urllib3.util import parse_url
 
 from ._internal_utils import to_native_string, unicode_is_ascii
 from .auth import HTTPBasicAuth
@@ -398,7 +398,7 @@ class PreparedRequest(RequestEncodingMixin, RequestHooksMixin):
 
     @staticmethod
     def _get_idna_encoded_host(host):
-        from pip._vendor import idna
+        import idna
 
         try:
             host = idna.encode(host, uts46=True).decode("utf-8")
@@ -945,7 +945,9 @@ class Response:
         return content
 
     def json(self, **kwargs):
-        r"""Returns the json-encoded content of a response, if any.
+        r"""Decodes the JSON response body (if any) as a Python object.
+
+        This may return a dictionary, list, etc. depending on what is in the response.
 
         :param \*\*kwargs: Optional arguments that ``json.loads`` takes.
         :raises requests.exceptions.JSONDecodeError: If the response body does not

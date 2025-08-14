@@ -40,12 +40,19 @@ is at <https://requests.readthedocs.io>.
 
 import warnings
 
-from pip._vendor import urllib3
+import urllib3
 
 from .exceptions import RequestsDependencyWarning
 
-charset_normalizer_version = None
-chardet_version = None
+try:
+    from charset_normalizer import __version__ as charset_normalizer_version
+except ImportError:
+    charset_normalizer_version = None
+
+try:
+    from chardet import __version__ as chardet_version
+except ImportError:
+    chardet_version = None
 
 
 def check_compatibility(urllib3_version, chardet_version, charset_normalizer_version):
@@ -76,8 +83,11 @@ def check_compatibility(urllib3_version, chardet_version, charset_normalizer_ver
         # charset_normalizer >= 2.0.0 < 4.0.0
         assert (2, 0, 0) <= (major, minor, patch) < (4, 0, 0)
     else:
-        # pip does not need or use character detection
-        pass
+        warnings.warn(
+            "Unable to find acceptable character detection dependency "
+            "(chardet or charset_normalizer).",
+            RequestsDependencyWarning,
+        )
 
 
 def _check_cryptography(cryptography_version):
@@ -112,18 +122,13 @@ except (AssertionError, ValueError):
 # if the standard library doesn't support SNI or the
 # 'ssl' library isn't available.
 try:
-    # Note: This logic prevents upgrading cryptography on Windows, if imported
-    #       as part of pip.
-    from pip._internal.utils.compat import WINDOWS
-    if not WINDOWS:
-        raise ImportError("pip internals: don't import cryptography on Windows")
     try:
         import ssl
     except ImportError:
         ssl = None
 
     if not getattr(ssl, "HAS_SNI", False):
-        from pip._vendor.urllib3.contrib import pyopenssl
+        from urllib3.contrib import pyopenssl
 
         pyopenssl.inject_into_urllib3()
 
@@ -135,7 +140,7 @@ except ImportError:
     pass
 
 # urllib3's DependencyWarnings should be silenced.
-from pip._vendor.urllib3.exceptions import DependencyWarning
+from urllib3.exceptions import DependencyWarning
 
 warnings.simplefilter("ignore", DependencyWarning)
 
