@@ -1,0 +1,145 @@
+{
+  "performance": {
+    "url_guess": {
+      "total_time": 5.567222222222223,
+      "memory": 100,
+      "cpu": 20,
+      "success_rate": 55
+    },
+    "common_crawl": {
+      "total_time": 13.361333333333334,
+      "memory": 200,
+      "cpu": 30,
+      "success_rate": 70
+    },
+    "scraping": {
+      "total_time": 33.403333333333336,
+      "memory": 500,
+      "cpu": 60,
+      "success_rate": 85
+    },
+    "hybrid": {
+      "total_time": 13.361333333333333,
+      "memory": 300,
+      "cpu": 40,
+      "success_rate": 82
+    }
+  },
+  "errors": [
+    {
+      "name": "ネットワークタイムアウト",
+      "probability": 0.05,
+      "impact": "個別企業の取得失敗",
+      "recovery": "自動リトライ（最大3回）",
+      "prevention": "タイムアウト時間の調整"
+    },
+    {
+      "name": "レート制限",
+      "probability": 0.02,
+      "impact": "API制限到達",
+      "recovery": "自動待機後再開",
+      "prevention": "リクエスト間隔の調整"
+    },
+    {
+      "name": "メモリ不足",
+      "probability": 0.01,
+      "impact": "プロセス停止",
+      "recovery": "バッチサイズ縮小",
+      "prevention": "メモリ監視とGC最適化"
+    },
+    {
+      "name": "HTML解析エラー",
+      "probability": 0.03,
+      "impact": "個別企業の解析失敗",
+      "recovery": "スキップして続行",
+      "prevention": "エラーハンドリング強化"
+    },
+    {
+      "name": "SSL証明書エラー",
+      "probability": 0.02,
+      "impact": "HTTPS接続失敗",
+      "recovery": "HTTPフォールバック",
+      "prevention": "証明書検証オプション"
+    }
+  ],
+  "quality": {
+    "データ完全性": {
+      "before": 100,
+      "after": 100,
+      "impact": "既存データは変更なし、新規列追加のみ"
+    },
+    "抽出精度": {
+      "url_guess": 55,
+      "common_crawl": 70,
+      "scraping": 85,
+      "hybrid": 82,
+      "impact": "複数手法の組み合わせで高精度維持"
+    },
+    "誤検出率": {
+      "rate": 2,
+      "example": "プライバシーポリシーを誤検出",
+      "mitigation": "除外キーワードリストで制御"
+    },
+    "データ鮮度": {
+      "real_time": true,
+      "cache_ttl": "24時間",
+      "impact": "最新の問い合わせURL取得"
+    }
+  },
+  "ui_impact": {
+    "Webインターフェース": {
+      "テーブル表示": {
+        "change": "「問い合わせURL」列を追加",
+        "impact": "最小限（1列追加のみ）",
+        "responsive": "✅ レスポンシブ対応維持"
+      },
+      "フィルター機能": {
+        "change": "「問い合わせURL有り」フィルター追加",
+        "impact": "プラス（機能向上）",
+        "implementation": "チェックボックス1個追加"
+      },
+      "エクスポート": {
+        "change": "CSV/Excelに列追加",
+        "impact": "なし（自動対応）",
+        "backward_compatible": "✅ 後方互換性維持"
+      }
+    },
+    "パフォーマンス": {
+      "初回読み込み": {
+        "before": "2秒",
+        "after": "2.1秒",
+        "impact": "0.1秒増（無視できるレベル）"
+      },
+      "ページング": {
+        "change": "なし",
+        "impact": "なし",
+        "note": "既存の処理を維持"
+      },
+      "検索機能": {
+        "change": "問い合わせURL検索追加",
+        "impact": "プラス（機能向上）",
+        "speed": "高速（インデックス済み）"
+      }
+    }
+  },
+  "design_impact": {
+    "ビジュアルデザイン": {
+      "カラースキーム": "変更なし",
+      "フォント": "変更なし",
+      "アイコン": "1個追加（メールアイコン）",
+      "レイアウト": "既存グリッドを維持"
+    },
+    "テーブルデザイン": {
+      "列幅調整": "自動調整で対応",
+      "ヘッダー": "1項目追加",
+      "ソート機能": "✅ 追加列もソート可能",
+      "デザイン統一性": "✅ 既存スタイル継承"
+    },
+    "モバイル対応": {
+      "スマホ表示": "横スクロール対応",
+      "タブレット": "完全表示",
+      "タッチ操作": "✅ 既存と同様",
+      "レスポンシブ": "✅ 完全対応"
+    }
+  }
+}
